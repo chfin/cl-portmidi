@@ -2,73 +2,53 @@
 
 (in-package #:portmidi)
 
-(define-foreign-library libportmidi
-    (:unix (:or "libportmidi.so.0" "libportmidi.so"))
-  (t (:default "libportmidi")))
+(defcfun (initialize "Pm_Initialize") :void
+  "=> nil
+Initializes PortMidi. It's automatically called when loading the system, but you can also use it to re-initialize it after a call to terminate.")
 
-(use-foreign-library libportmidi)
+;; ... here
+(initialize)
 
-;(defctype pm-error :int)
-(defctype pm-stream :void)
-(defctype pm-device-id :int)
-(defctype pm-timestamp :int32)
-(defctype pm-message :int32)
+(defcfun (terminate "Pm_Terminate") :void
+  "=> nil
+Terminates PortMidi.")
 
-(defcstruct pm-device-info
-    "Information about a device. Usually owned by the lib."
-  (structVersion :int)
-  (interf :string)
-  (name :string)
-  (input :boolean)
-  (output :boolean)
-  (opened :boolean))
-
-(defcstruct pm-event
-    "The PortMidi event structure. Streams use instances of this."
-  (message pm-message)
-  (timestamp pm-timestamp))
-
-(define-foreign-type midi-stream-type ()
-  ()
-  (:actual-type :pointer)
-  (:simple-parser midi-stream))
-
-(define-foreign-type pm-error-type ()
-  ()
-  (:actual-type :int)
-  (:simple-parser pm-error))
-
-(defmethod translate-from-foreign (value (type pm-error-type))
-  "Raise an error, if value, a PmError code, is non-zero."
-  (case value
-    (0 nil)
-    (1 t)
-    (t (error (get-error-text value)))))
-
-(defcfun (initialize "Pm_Initialize") :void)
-
-(defcfun (terminate "Pm_Terminate") :void)
-
-(defcfun (has-host-error "Pm_HasHostError") :int
+(defcfun (has-host-error "Pm_HasHostError") :boolean
+  "=> t if there are pending host errors for `stream`"
   (stream midi-stream))
 
 (defcfun (get-error-text "Pm_GetErrorText") :string
+  "=> the error message corresponding to `errnum`"
   (errnum pm-error))
 
-;;TODO: Pm_GetHostErrorText
+(defun get-host-error-text (stream)
+  "=> the latest host error message for `stream`"
+  (with-foreign-object (msg :string 256)
+    (foreign-funcall "Pm_GetHostErrorText"
+		     :string msg
+		     :unsigned-int 256
+		     :void)
+    msg))
 
-(defcfun (count-devices "Pm_CountDevices") :int)
+(defcfun (count-devices "Pm_CountDevices") :int
+  "=> the number of available devices
+Valid device ids range from `0` to `(- (count-devices) 1)`.")
 
 (defcfun (get-default-input-device-id "Pm_GetDefaultInputDeviceID")
-    pm-device-id)
+    pm-device-id
+  "=> the id of the default input device")
 
 (defcfun (get-default-output-device-id "Pm_GetDefaultOutputDeviceID")
-    pm-device-id)
+    pm-device-id
+  "=> he id of the default output device")
 
-(defcfun (get-device-info "Pm_GetDeviceInfo") :pointer
+(defcfun (get-device-info "Pm_GetDeviceInfo") pm-device-info
+  "=> an instance of device-info describing the device given by `id`
+To quickly inspect a device use `describe-device`."
   (id pm-device-id))
 
 (defun describe-device (device-id)
+  "=> a string summarizing the devices information"
   (with-foreign-slots ((interf name input output)
 		       (get-device-info device-id)
 		       pm-device-info)
@@ -76,10 +56,13 @@
 	    interf name input output)))
 
 (defun list-devices ()
+  "=> a list of strings describing all available devices.
+See `describe-device`"
   (loop for i below (count-devices)
      collect (describe-device i)))
 
 (defun open-input (input-device buffer-size)
+  "=> a `midi-stream` opened to receive MIDI data."
   (with-foreign-object (stream-ptr :pointer)
     (let ((err (foreign-funcall "Pm_OpenInput"
 				:pointer stream-ptr
@@ -93,6 +76,7 @@
 	(error (get-error-text errnum))))))
 
 (defun open-output (output-device buffer-size latency)
+  "=> a `midi-stream` opened to send MIDI data"
   (with-foreign-object (stream-ptr :pointer)
     (let ((err (foreign-funcall "Pm_OpenOutput"
 				:pointer stream-ptr
@@ -110,29 +94,40 @@
 
 ;;resembles the Pm_Channel() macro
 (defun channel (channel)
+  "=> the bitmask for `channel`"
   (ash 1 channel))
 
-;;creates the bit mask for multiple channels
 (defun channels (&rest channels)
+  "=> a bitmask for multiple channels"
   (apply #'+ (mapcar #'channel channels)))
 
 (defcfun (set-channel-mask "Pm_SetChannelMask") pm-error
+  "=> nil
+Sets a channel mask (`mask`) on `stream`."
   (stream midi-stream)
   (mask :int))
 
-;;note: "Pm_Abort" renamed to "abort-stream"
+;;note: "Pm_Abort" renamed to "abort-midi"
 (defcfun (abort-midi "Pm_Abort") pm-error
+  "=> nil
+Terminates outgoing messages on `stream`.
+You should call `close-midi` immediately after this."
   (stream midi-stream))
 
 (defcfun (close-midi "Pm_Close") pm-error
+  "=> nil
+Closes `stream`, flushing all buffers."
   (stream midi-stream))
 
 (defcfun (synchronize-midi "Pm_Synchronize") pm-error
+  "=> nil
+Synchronizes `stream` with the clock.
+See PortMidi documentation."
   (stream midi-stream))
 
-;; TODO: message operations
-
 (defun read-midi (stream)
+  "=> a `midi-event`
+Reads a single `midi-event` from `stream`."
   (with-foreign-object (buffer 'pm-event)
     (when (foreign-funcall "Pm_Read"
 			   midi-stream stream
@@ -142,9 +137,12 @@
       (mem-ref buffer))))
 
 (defcfun (poll-midi "Pm_Poll") pm-error
+  "=> t, if `stream` has pending incomming events, nil otherwise"
   (stream midi-stream))
 
 (defun write-midi (stream event)
+  "=> nil
+Writes the `midi-event` `event` to `stream`."
   (foreign-funcall "Pm_Write"
 		   midi-stream stream
 		   pm-event event
@@ -152,6 +150,8 @@
 		   pm-error))
 
 (defun write-short-midi (stream timestamp message)
+  "=> nil
+Creates a `midi-event` from `timestamt` and `message` and writes it to `stream`."
   (with-foreign-object (event 'pm-event)
     (setf (foreign-slot-value event 'pm-event 'message) message
 	  (foreign-slot-value event 'pm-event 'timestamp) timestamp)
