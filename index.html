@@ -40,7 +40,7 @@
 
 <p>I'm currently working on a more convenient interface.</p>
 
-<h2>Example:</h2>
+<h2>Example</h2>
 
 <div class="highlight"><pre><span class="p">(</span><span class="nv">ql:quickload</span> <span class="s">"portmidi"</span><span class="p">)</span>
 <span class="p">(</span><span class="nb">defvar</span> <span class="vg">*midi-out*</span> <span class="p">(</span><span class="nv">pm:open-output</span> <span class="p">(</span><span class="nv">pm:get-default-output-device-id</span><span class="p">)</span> <span class="mi">1024</span> <span class="mi">0</span><span class="p">))</span>
@@ -48,6 +48,10 @@
 <span class="p">(</span><span class="nv">pm:write-short-midi</span> <span class="vg">*midi-out*</span> <span class="mi">0</span> <span class="p">(</span><span class="nv">pm:note-off</span> <span class="mi">0</span> <span class="mi">80</span><span class="p">))</span>
 <span class="p">(</span><span class="nv">pm:close-midi</span> <span class="vg">*midi-out*</span><span class="p">)</span>
 </pre></div>
+
+<h2>Documentation</h2>
+
+<p>See <a href="portmidi.html">here</a>.</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/chfin">chfin</a></p>
