@@ -1,277 +1,374 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!doctype html>
 
-<head>
-<title>GenDoc Documentation
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+<title>portmidi - PortMidi bindings for Common Lisp
 </title>
-<link rel='stylesheet' type='text/css' href='portmidi.css' />
-</head>
-<html>
-<a name='REFERENCE-PORTMIDI'></a>
-<h1>Reference: PORTMIDI
-</h1>
-<h2>Functions
-</h2>
-<a name='ABORT-MIDI' class='apiref-row'></a>
-<div class='apiref-spec'>ABORT-MIDI
-</div>
-<div class='apiref-lambda'>(STREAM)
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+<link rel='stylesheet' href='portmidi.css' />
+  </head>
+  <body>
+<article class='markdown-article' id='file-intro-md'>
+
+<h1>portmidi</h1>
+
+<p>PortMidi bindings for Common Lisp using CFFI</p>
+
+<p>Loadable as &quot;portmidi&quot; via ASDF / Quicklisp (as a local project)</p>
+
+<h2>Status</h2>
+
+<p>The library is usable so far, almost all functions are implemented (except for filtering).</p>
+
+<p>I'm currently working on a more convenient interface.</p>
+
+<h2>Example:</h2>
+
+<pre><code><span class="code"><span class="paren1">(<span class="code">ql:quickload <span class="string">"portmidi"</span></span>)</span>
+<span class="paren1">(<span class="code"><i><span class="symbol">defvar</span></i> <span class="special">*midi-out*</span> <span class="paren2">(<span class="code">pm:open-output <span class="paren3">(<span class="code">pm:get-default-output-device-id</span>)</span> 1024 0</span>)</span></span>)</span>
+<span class="paren1">(<span class="code">pm:write-short-midi <span class="special">*midi-out*</span> 0 <span class="paren2">(<span class="code">pm:note-on 0 80</span>)</span></span>)</span>
+<span class="paren1">(<span class="code">pm:write-short-midi <span class="special">*midi-out*</span> 0 <span class="paren2">(<span class="code">pm:note-off 0 80</span>)</span></span>)</span>
+<span class="paren1">(<span class="code">pm:close-midi <span class="special">*midi-out*</span></span>)</span></span></code></pre>
+
+<h2>Details</h2>
+
+<p>If you are already familiar with PortMidi, you can basically use the functions from <a href="#reference-portmidi" ><code>portmidi</code></a> similar to the functions from portmidi.h.
+Some functions have be renamed to avoid name conflicts.</p>
+
+<p>The package <a href="#reference-portmidi" ><code>portmidi</code></a> contains the library functions. It also has the nickname <code>pm</code>.</p>
+
+<p>The package <a href="#reference-portmidi.doc" ><code>portmidi.doc</code></a> can be used to generate this documentation.</p>
+
+</article>
+<article id='reference-portmidi' class='apiref-article'>
+  <h1>Reference: PORTMIDI
+  </h1>
+<section id='portmidi-functions' class='section-functions'>
+  <h2>Functions
+  </h2>
+<section id='apiref-abort-midi' class='section-apiref-item'>
+  <div class='apiref-spec'>ABORT-MIDI
+  </div>
+  <div class='apiref-lambda'>(STREAM)
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Terminates outgoing messages on <code>stream</code>.
 You should call <code>close-midi</code> immediately after this.</p>
 
-</div>
-<a name='CHANNEL' class='apiref-row'></a>
-<div class='apiref-spec'>CHANNEL
-</div>
-<div class='apiref-lambda'>(CHANNEL)
-</div>
-<div class='apiref-result'>=> the bitmask for `channel`
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='CHANNELS' class='apiref-row'></a>
-<div class='apiref-spec'>CHANNELS
-</div>
-<div class='apiref-lambda'>(&REST CHANNELS)
-</div>
-<div class='apiref-result'>=> a bitmask for multiple channels
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='CLOSE-MIDI' class='apiref-row'></a>
-<div class='apiref-spec'>CLOSE-MIDI
-</div>
-<div class='apiref-lambda'>(STREAM)
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-channel' class='section-apiref-item'>
+  <div class='apiref-spec'>CHANNEL
+  </div>
+  <div class='apiref-lambda'>(CHANNEL)
+  </div>
+  <div class='apiref-result'>=&gt; the bitmask for <code>channel</code>
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-channels' class='section-apiref-item'>
+  <div class='apiref-spec'>CHANNELS
+  </div>
+  <div class='apiref-lambda'>(&amp;REST CHANNELS)
+  </div>
+  <div class='apiref-result'>=&gt; a bitmask for multiple channels
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-close-midi' class='section-apiref-item'>
+  <div class='apiref-spec'>CLOSE-MIDI
+  </div>
+  <div class='apiref-lambda'>(STREAM)
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Closes <code>stream</code>, flushing all buffers.</p>
 
-</div>
-<a name='COUNT-DEVICES' class='apiref-row'></a>
-<div class='apiref-spec'>COUNT-DEVICES
-</div>
-<div class='apiref-lambda'>()
-</div>
-<div class='apiref-result'>=> the number of available devices
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-count-devices' class='section-apiref-item'>
+  <div class='apiref-spec'>COUNT-DEVICES
+  </div>
+  <div class='apiref-lambda'>()
+  </div>
+  <div class='apiref-result'>=&gt; the number of available devices
+  </div>
+  <div class='apiref-doc'>
 
 <p>Valid device ids range from <code>0</code> to <code>(- (count-devices) 1)</code>.</p>
 
-</div>
-<a name='GET-DEFAULT-INPUT-DEVICE-ID' class='apiref-row'></a>
-<div class='apiref-spec'>GET-DEFAULT-INPUT-DEVICE-ID
-</div>
-<div class='apiref-lambda'>()
-</div>
-<div class='apiref-result'>=> the id of the default input device
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='GET-DEFAULT-OUTPUT-DEVICE-ID' class='apiref-row'></a>
-<div class='apiref-spec'>GET-DEFAULT-OUTPUT-DEVICE-ID
-</div>
-<div class='apiref-lambda'>()
-</div>
-<div class='apiref-result'>=> he id of the default output device
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='GET-DEVICE-INFO' class='apiref-row'></a>
-<div class='apiref-spec'>GET-DEVICE-INFO
-</div>
-<div class='apiref-lambda'>(ID)
-</div>
-<div class='apiref-result'>=> an instance of device-info describing the device given by `id`
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-get-default-input-device-id' class='section-apiref-item'>
+  <div class='apiref-spec'>GET-DEFAULT-INPUT-DEVICE-ID
+  </div>
+  <div class='apiref-lambda'>()
+  </div>
+  <div class='apiref-result'>=&gt; the id of the default input device
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-get-default-output-device-id' class='section-apiref-item'>
+  <div class='apiref-spec'>GET-DEFAULT-OUTPUT-DEVICE-ID
+  </div>
+  <div class='apiref-lambda'>()
+  </div>
+  <div class='apiref-result'>=&gt; he id of the default output device
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-get-device-info' class='section-apiref-item'>
+  <div class='apiref-spec'>GET-DEVICE-INFO
+  </div>
+  <div class='apiref-lambda'>(ID)
+  </div>
+  <div class='apiref-result'>=&gt; an instance of device-info describing the device given by <code>id</code>
+  </div>
+  <div class='apiref-doc'>
 
 <p>To quickly inspect a device use <code>describe-device</code>.</p>
 
-</div>
-<a name='GET-ERROR-TEXT' class='apiref-row'></a>
-<div class='apiref-spec'>GET-ERROR-TEXT
-</div>
-<div class='apiref-lambda'>(ERRNUM)
-</div>
-<div class='apiref-result'>=> the error message corresponding to `errnum`
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='HAS-HOST-ERROR' class='apiref-row'></a>
-<div class='apiref-spec'>HAS-HOST-ERROR
-</div>
-<div class='apiref-lambda'>(STREAM)
-</div>
-<div class='apiref-result'>=> t if there are pending host errors for `stream`
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='INITIALIZE' class='apiref-row'></a>
-<div class='apiref-spec'>INITIALIZE
-</div>
-<div class='apiref-lambda'>()
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-get-error-text' class='section-apiref-item'>
+  <div class='apiref-spec'>GET-ERROR-TEXT
+  </div>
+  <div class='apiref-lambda'>(ERRNUM)
+  </div>
+  <div class='apiref-result'>=&gt; the error message corresponding to <code>errnum</code>
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-has-host-error' class='section-apiref-item'>
+  <div class='apiref-spec'>HAS-HOST-ERROR
+  </div>
+  <div class='apiref-lambda'>(STREAM)
+  </div>
+  <div class='apiref-result'>=&gt; t if there are pending host errors for <code>stream</code>
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-initialize' class='section-apiref-item'>
+  <div class='apiref-spec'>INITIALIZE
+  </div>
+  <div class='apiref-lambda'>()
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Initializes PortMidi. It's automatically called when loading the system, but you can also use it to re-initialize it after a call to terminate.</p>
 
-</div>
-<a name='LIST-DEVICES' class='apiref-row'></a>
-<div class='apiref-spec'>LIST-DEVICES
-</div>
-<div class='apiref-lambda'>()
-</div>
-<div class='apiref-result'>=> a list of strings describing all available devices.
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-list-devices' class='section-apiref-item'>
+  <div class='apiref-spec'>LIST-DEVICES
+  </div>
+  <div class='apiref-lambda'>()
+  </div>
+  <div class='apiref-result'>=&gt; a list of strings describing all available devices.
+  </div>
+  <div class='apiref-doc'>
 
 <p>See <code>describe-device</code></p>
 
-</div>
-<a name='MESSAGE-DATA1' class='apiref-row'></a>
-<div class='apiref-spec'>MESSAGE-DATA1
-</div>
-<div class='apiref-lambda'>(MSG)
-</div>
-<div class='apiref-result'>=> the first data byte of the MIDI message `msg` as an integer
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='MESSAGE-DATA2' class='apiref-row'></a>
-<div class='apiref-spec'>MESSAGE-DATA2
-</div>
-<div class='apiref-lambda'>(MSG)
-</div>
-<div class='apiref-result'>=> the second data byte of the MIDI message `msg` as an integer
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='MESSAGE-STATUS' class='apiref-row'></a>
-<div class='apiref-spec'>MESSAGE-STATUS
-</div>
-<div class='apiref-lambda'>(MSG)
-</div>
-<div class='apiref-result'>=> the status byte of the MIDI message `msg` as an integer
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='NOTE-OFF' class='apiref-row'></a>
-<div class='apiref-spec'>NOTE-OFF
-</div>
-<div class='apiref-lambda'>(CHANNEL NOTE &OPTIONAL (VELOCITY 80))
-</div>
-<div class='apiref-result'>=> a "Note Off" MIDI message
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='NOTE-ON' class='apiref-row'></a>
-<div class='apiref-spec'>NOTE-ON
-</div>
-<div class='apiref-lambda'>(CHANNEL NOTE &OPTIONAL (VELOCITY 80))
-</div>
-<div class='apiref-result'>=> a "Note On" MIDI message
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='OPEN-INPUT' class='apiref-row'></a>
-<div class='apiref-spec'>OPEN-INPUT
-</div>
-<div class='apiref-lambda'>(INPUT-DEVICE BUFFER-SIZE)
-</div>
-<div class='apiref-result'>=> a `midi-stream` opened to receive MIDI data.
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='OPEN-OUTPUT' class='apiref-row'></a>
-<div class='apiref-spec'>OPEN-OUTPUT
-</div>
-<div class='apiref-lambda'>(OUTPUT-DEVICE BUFFER-SIZE LATENCY)
-</div>
-<div class='apiref-result'>=> a `midi-stream` opened to send MIDI data
-</div>
-<div class='apiref-doc'>
-</div>
-<a name='READ-MIDI' class='apiref-row'></a>
-<div class='apiref-spec'>READ-MIDI
-</div>
-<div class='apiref-lambda'>(STREAM)
-</div>
-<div class='apiref-result'>=> a `midi-event`
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-message-data1' class='section-apiref-item'>
+  <div class='apiref-spec'>MESSAGE-DATA1
+  </div>
+  <div class='apiref-lambda'>(MSG)
+  </div>
+  <div class='apiref-result'>=&gt; the first data byte of the MIDI message <code>msg</code> as an integer
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-message-data2' class='section-apiref-item'>
+  <div class='apiref-spec'>MESSAGE-DATA2
+  </div>
+  <div class='apiref-lambda'>(MSG)
+  </div>
+  <div class='apiref-result'>=&gt; the second data byte of the MIDI message <code>msg</code> as an integer
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-message-status' class='section-apiref-item'>
+  <div class='apiref-spec'>MESSAGE-STATUS
+  </div>
+  <div class='apiref-lambda'>(MSG)
+  </div>
+  <div class='apiref-result'>=&gt; the status byte of the MIDI message <code>msg</code> as an integer
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-note-off' class='section-apiref-item'>
+  <div class='apiref-spec'>NOTE-OFF
+  </div>
+  <div class='apiref-lambda'>(CHANNEL NOTE &amp;OPTIONAL (VELOCITY 80))
+  </div>
+  <div class='apiref-result'>=&gt; a &quot;Note Off&quot; MIDI message
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-note-on' class='section-apiref-item'>
+  <div class='apiref-spec'>NOTE-ON
+  </div>
+  <div class='apiref-lambda'>(CHANNEL NOTE &amp;OPTIONAL (VELOCITY 80))
+  </div>
+  <div class='apiref-result'>=&gt; a &quot;Note On&quot; MIDI message
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-open-input' class='section-apiref-item'>
+  <div class='apiref-spec'>OPEN-INPUT
+  </div>
+  <div class='apiref-lambda'>(INPUT-DEVICE BUFFER-SIZE)
+  </div>
+  <div class='apiref-result'>=&gt; a <code>midi-stream</code> opened to receive MIDI data.
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-open-output' class='section-apiref-item'>
+  <div class='apiref-spec'>OPEN-OUTPUT
+  </div>
+  <div class='apiref-lambda'>(OUTPUT-DEVICE BUFFER-SIZE LATENCY)
+  </div>
+  <div class='apiref-result'>=&gt; a <code>midi-stream</code> opened to send MIDI data
+  </div>
+  <div class='apiref-doc'>
+
+  </div>
+</section>
+<section id='apiref-read-midi' class='section-apiref-item'>
+  <div class='apiref-spec'>READ-MIDI
+  </div>
+  <div class='apiref-lambda'>(STREAM)
+  </div>
+  <div class='apiref-result'>=&gt; a <code>midi-event</code>
+  </div>
+  <div class='apiref-doc'>
 
 <p>Reads a single <code>midi-event</code> from <code>stream</code>.</p>
 
-</div>
-<a name='SET-CHANNEL-MASK' class='apiref-row'></a>
-<div class='apiref-spec'>SET-CHANNEL-MASK
-</div>
-<div class='apiref-lambda'>(STREAM MASK)
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-set-channel-mask' class='section-apiref-item'>
+  <div class='apiref-spec'>SET-CHANNEL-MASK
+  </div>
+  <div class='apiref-lambda'>(STREAM MASK)
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Sets a channel mask (<code>mask</code>) on <code>stream</code>.</p>
 
-</div>
-<a name='SYNCHRONIZE-MIDI' class='apiref-row'></a>
-<div class='apiref-spec'>SYNCHRONIZE-MIDI
-</div>
-<div class='apiref-lambda'>(STREAM)
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-synchronize-midi' class='section-apiref-item'>
+  <div class='apiref-spec'>SYNCHRONIZE-MIDI
+  </div>
+  <div class='apiref-lambda'>(STREAM)
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Synchronizes <code>stream</code> with the clock.
 See PortMidi documentation.</p>
 
-</div>
-<a name='TERMINATE' class='apiref-row'></a>
-<div class='apiref-spec'>TERMINATE
-</div>
-<div class='apiref-lambda'>()
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-terminate' class='section-apiref-item'>
+  <div class='apiref-spec'>TERMINATE
+  </div>
+  <div class='apiref-lambda'>()
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Terminates PortMidi.</p>
 
-</div>
-<a name='WRITE-MIDI' class='apiref-row'></a>
-<div class='apiref-spec'>WRITE-MIDI
-</div>
-<div class='apiref-lambda'>(STREAM EVENT)
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-write-midi' class='section-apiref-item'>
+  <div class='apiref-spec'>WRITE-MIDI
+  </div>
+  <div class='apiref-lambda'>(STREAM EVENT)
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Writes the <code>midi-event</code> <code>event</code> to <code>stream</code>.</p>
 
-</div>
-<a name='WRITE-SHORT-MIDI' class='apiref-row'></a>
-<div class='apiref-spec'>WRITE-SHORT-MIDI
-</div>
-<div class='apiref-lambda'>(STREAM TIMESTAMP MESSAGE)
-</div>
-<div class='apiref-result'>=> nil
-</div>
-<div class='apiref-doc'>
+  </div>
+</section>
+<section id='apiref-write-short-midi' class='section-apiref-item'>
+  <div class='apiref-spec'>WRITE-SHORT-MIDI
+  </div>
+  <div class='apiref-lambda'>(STREAM TIMESTAMP MESSAGE)
+  </div>
+  <div class='apiref-result'>=&gt; nil
+  </div>
+  <div class='apiref-doc'>
 
 <p>Creates a <code>midi-event</code> from <code>timestamt</code> and <code>message</code> and writes it to <code>stream</code>.</p>
 
-</div>
+  </div>
+</section>
+</section>
+</article>
+<article id='reference-portmidi.doc' class='apiref-article'>
+  <h1>Reference: PORTMIDI.DOC
+  </h1>
+<section id='portmidi.doc-functions' class='section-functions'>
+  <h2>Functions
+  </h2>
+<section id='apiref-create-doc' class='section-apiref-item'>
+  <div class='apiref-spec'>CREATE-DOC
+  </div>
+  <div class='apiref-lambda'>()
+  </div>
+  <div class='apiref-result'>
+  </div>
+  <div class='apiref-doc'>
+
+<p>Creates the documentation (doc/portmidi.html) using cl-gendoc.</p>
+
+  </div>
+</section>
+</section>
+</article>
+  </body>
 </html>
