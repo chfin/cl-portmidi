@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>cl-portmidi by chfin</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>cl-portmidi</h1>
+        <p>PortMidi bindings for Common Lisp (uses CFFI)</p>
+
+        <p class="view"><a href="https://github.com/chfin/cl-portmidi">View the Project on GitHub <small>chfin/cl-portmidi</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/chfin/cl-portmidi/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/chfin/cl-portmidi/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/chfin/cl-portmidi">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>portmidi</h1>
+
+<p>PortMidi bindings for Common Lisp using CFFI</p>
+
+<p>Loadable as "portmidi" via ASDF / Quicklisp (as a local project)</p>
+
+<h2>Status</h2>
+
+<p>The library is usable so far, almost all functions are implemented (except for filtering).</p>
+
+<p>I'm currently working on a more convenient interface.</p>
+
+<h2>Example:</h2>
+
+<div class="highlight"><pre><span class="p">(</span><span class="nv">ql:quickload</span> <span class="s">"portmidi"</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defvar</span> <span class="vg">*midi-out*</span> <span class="p">(</span><span class="nv">pm:open-output</span> <span class="p">(</span><span class="nv">pm:get-default-output-device-id</span><span class="p">)</span> <span class="mi">1024</span> <span class="mi">0</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">pm:write-short-midi</span> <span class="vg">*midi-out*</span> <span class="mi">0</span> <span class="p">(</span><span class="nv">pm:note-on</span> <span class="mi">0</span> <span class="mi">80</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">pm:write-short-midi</span> <span class="vg">*midi-out*</span> <span class="mi">0</span> <span class="p">(</span><span class="nv">pm:note-off</span> <span class="mi">0</span> <span class="mi">80</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">pm:close-midi</span> <span class="vg">*midi-out*</span><span class="p">)</span>
+</pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/chfin">chfin</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
