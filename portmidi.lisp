@@ -134,7 +134,7 @@ Reads a single `midi-event` from `stream`."
 			   :pointer buffer
 			   :int32 1
 			   pm-error)
-      (mem-ref buffer))))
+      (mem-ref buffer :int32))))
 
 (defcfun (poll-midi "Pm_Poll") pm-error
   "=> t, if `stream` has pending incomming events, nil otherwise"
