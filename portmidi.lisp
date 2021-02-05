@@ -56,10 +56,10 @@ To quickly inspect a device use `describe-device`."
 	    interf name input output)))
 
 (defun list-devices ()
-  "=> a list of strings describing all available devices.
+  "=> an alist of device ids and strings describing all available devices.
 See `describe-device`"
   (loop for i below (count-devices)
-     collect (describe-device i)))
+    collect (cons i (describe-device i))))
 
 (defun open-input (input-device buffer-size)
   "=> a `midi-stream` opened to receive MIDI data."
