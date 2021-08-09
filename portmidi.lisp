@@ -71,9 +71,9 @@ See `describe-device`"
 				:pointer (null-pointer)
 				:pointer (null-pointer)
 				pm-error)))
-      (case err
-	(mem-ref stream-ptr 'midi-stream)
-	(error (get-error-text errnum))))))
+      (if err
+	(error (get-error-text errnum))
+        (mem-ref stream-ptr 'midi-stream)))))
 
 (defun open-output (output-device buffer-size latency)
   "=> a `midi-stream` opened to send MIDI data"
