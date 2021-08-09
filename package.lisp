@@ -14,6 +14,7 @@
 	   #:read-midi #:write-midi #:write-short-midi 
 
 	   #:message-status #:message-data1 #:message-data2
+           #:make-message #:make-message*
 	   #:note-off #:note-on)
   (:documentation
    "portmidi provides Common Lisp bindings to the PortMidi library.
